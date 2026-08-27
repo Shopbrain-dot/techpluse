@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Settings | TechPulse Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fb;
+    color:#111827;
+}
+
+.layout{
+    min-height:100vh;
+    display:flex;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:250px;
+    background:#0b1220;
+    color:white;
+    padding:25px 16px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    padding:0 12px;
+    margin-bottom:35px;
+}
+
+.logo span{
+    color:#60a5fa;
+}
+
+.section-title{
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:bold;
+    padding:0 12px;
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+.nav{
+    display:block;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px;
+    margin-bottom:5px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.nav:hover,
+.nav.active{
+    background:#1e293b;
+    color:white;
+}
+
+.logout{
+    position:absolute;
+    bottom:20px;
+    left:16px;
+    right:16px;
+    padding:12px;
+    border:0;
+    border-radius:8px;
+    background:#1e293b;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.logout:hover{
+    background:#334155;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+}
+
+.header{
+    margin-bottom:25px;
+}
+
+.header h1{
+    margin:0;
+    font-size:30px;
+}
+
+.header p{
+    color:#6b7280;
+    margin:7px 0 0;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+#message{
+    display:none;
+    padding:13px;
+    border-radius:8px;
+    margin-bottom:18px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* =========================
+   SETTINGS CARD
+========================= */
+
+.settings-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:25px;
+    max-width:1000px;
+    margin-bottom:20px;
+}
+
+.settings-card h2{
+    margin:0 0 5px;
+    font-size:20px;
+}
+
+.settings-card > p{
+    margin:0 0 22px;
+    color:#6b7280;
+    font-size:14px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.field{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    font-family:inherit;
+    font-size:14px;
+    background:white;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#2563eb;
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+    line-height:1.5;
+}
+
+.help{
+    margin-top:6px;
+    color:#6b7280;
+    font-size:12px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+/* =========================
+   SOCIAL LINKS
+========================= */
+
+.social-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+/* =========================
+   TOGGLE
+========================= */
+
+.toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    padding:15px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+}
+
+.toggle-info strong{
+    display:block;
+    font-size:14px;
+}
+
+.toggle-info span{
+    display:block;
+    margin-top:4px;
+    color:#6b7280;
+    font-size:12px;
+}
+
+.switch{
+    position:relative;
+    width:48px;
+    height:26px;
+    flex-shrink:0;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#cbd5e1;
+    border-radius:999px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:3px;
+    top:3px;
+    background:white;
+    border-radius:50%;
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+    background:#2563eb;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(22px);
+}
+
+/* =========================
+   SAVE AREA
+========================= */
+
+.save-area{
+    max-width:1000px;
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:20px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.save-area p{
+    margin:0;
+    color:#6b7280;
+    font-size:13px;
+}
+
+.save-button{
+    border:0;
+    background:#2563eb;
+    color:white;
+    padding:13px 22px;
+    border-radius:9px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.save-button:hover{
+    background:#1d4ed8;
+}
+
+.save-button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    .layout{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+    }
+
+    .logout{
+        position:static;
+        width:100%;
+        margin-top:20px;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:20px;
+    }
+
+    .row,
+    .social-grid{
+        grid-template-columns:1fr;
+    }
+
+    .save-area{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .save-button{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        Tech<span>Pulse</span>
+    </div>
+
+    <div class="section-title">
+        Administration
+    </div>
+
+    <a href="dashboard.html" class="nav">
+        📊 Dashboard
+    </a>
+
+    <a href="articles.html" class="nav">
+        📰 Articles
+    </a>
+
+    <a href="categories.html" class="nav">
+        🏷️ Categories
+    </a>
+
+    <a href="authors.html" class="nav">
+        ✍️ Authors
+    </a>
+
+    <a href="subscribers.html" class="nav">
+        📧 Subscribers
+    </a>
+
+    <a href="settings.html" class="nav active">
+        ⚙️ Settings
+    </a>
+
+    <button class="logout" id="logout">
+        🚪 Log out
+    </button>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+    <div class="header">
+
+        <h1>Settings</h1>
+
+        <p>
+            Manage your TechPulse website settings.
+        </p>
+
+    </div>
+
+
+    <div id="message"></div>
+
+
+    <!-- =========================
+         GENERAL SETTINGS
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>General Settings</h2>
+
+        <p>
+            Basic information about your TechPulse website.
+        </p>
+
+
+        <div class="field">
+
+            <label for="siteName">
+                Site Name
+            </label>
+
+            <input
+                type="text"
+                id="siteName"
+                placeholder="TechPulse"
+                required
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="tagline">
+                Tagline
+            </label>
+
+            <input
+                type="text"
+                id="tagline"
+                placeholder="The latest in technology, AI and innovation."
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="siteDescription">
+                Site Description
+            </label>
+
+            <textarea
+                id="siteDescription"
+                placeholder="Describe your website..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="field">
+
+                <label for="logoUrl">
+                    Logo URL
+                </label>
+
+                <input
+                    type="url"
+                    id="logoUrl"
+                    placeholder="https://example.com/logo.png"
+                >
+
+                <div class="help">
+                    Enter the direct URL of your TechPulse logo.
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="faviconUrl">
+                    Favicon URL
+                </label>
+
+                <input
+                    type="url"
+                    id="faviconUrl"
+                    placeholder="https://example.com/favicon.png"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CONTACT
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>Contact</h2>
+
+        <p>
+            Contact information for your website.
+        </p>
+
+
+        <div class="field">
+
+            <label for="contactEmail">
+                Contact Email
+            </label>
+
+            <input
+                type="email"
+                id="contactEmail"
+                placeholder="hello@techpulse.com"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SOCIAL MEDIA
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>Social Media</h2>
+
+        <p>
+            Add links to your official TechPulse social media accounts.
+        </p>
+
+
+        <div class="social-grid">
+
+            <div class="field">
+
+                <label for="twitterUrl">
+                    X / Twitter
+                </label>
+
+                <input
+                    type="url"
+                    id="twitterUrl"
+                    placeholder="https://x.com/techpulse"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="facebookUrl">
+                    Facebook
+                </label>
+
+                <input
+                    type="url"
+                    id="facebookUrl"
+                    placeholder="https://facebook.com/techpulse"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="instagramUrl">
+                    Instagram
+                </label>
+
+                <input
+                    type="url"
+                    id="instagramUrl"
+                    placeholder="https://instagram.com/techpulse"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="youtubeUrl">
+                    YouTube
+                </label>
+
+                <input
+                    type="url"
+                    id="youtubeUrl"
+                    placeholder="https://youtube.com/@techpulse"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="linkedinUrl">
+                    LinkedIn
+                </label>
+
+                <input
+                    type="url"
+                    id="linkedinUrl"
+                    placeholder="https://linkedin.com/company/techpulse"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="tiktokUrl">
+                    TikTok
+                </label>
+
+                <input
+                    type="url"
+                    id="tiktokUrl"
+                    placeholder="https://tiktok.com/@techpulse"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SEO
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>SEO</h2>
+
+        <p>
+            Control how TechPulse appears in search engines.
+        </p>
+
+
+        <div class="field">
+
+            <label for="seoTitle">
+                SEO Title
+            </label>
+
+            <input
+                type="text"
+                id="seoTitle"
+                placeholder="TechPulse | Latest Technology News"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="seoDescription">
+                SEO Description
+            </label>
+
+            <textarea
+                id="seoDescription"
+                placeholder="Read the latest technology news..."
+            ></textarea>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         HOMEPAGE
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>Homepage</h2>
+
+        <p>
+            Configure how articles appear on the TechPulse homepage.
+        </p>
+
+
+        <div class="field">
+
+            <label for="articleLimit">
+                Homepage Article Limit
+            </label>
+
+            <input
+                type="number"
+                id="articleLimit"
+                min="1"
+                max="100"
+                value="12"
+            >
+
+            <div class="help">
+                Number of articles displayed on the homepage.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         COMMENTS
+    ========================= -->
+
+    <section class="settings-card">
+
+        <h2>Comments</h2>
+
+        <p>
+            Control whether article comments are enabled.
+        </p>
+
+
+        <div class="toggle-row">
+
+            <div class="toggle-info">
+
+                <strong>
+                    Enable Comments
+                </strong>
+
+                <span>
+                    Allow visitors to comment on articles.
+                </span>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="commentsEnabled"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SAVE
+    ========================= -->
+
+    <div class="save-area">
+
+        <p>
+            Changes will be saved to your TechPulse database.
+        </p>
+
+        <button
+            class="save-button"
+            id="saveButton"
+        >
+            💾 Save Settings
+        </button>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let settingsId = null;
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(text, type){
+
+    const box =
+        document.getElementById("message");
+
+    box.textContent = text;
+
+    box.style.display = "block";
+
+
+    if(type === "success"){
+
+        box.style.background = "#dcfce7";
+        box.style.color = "#166534";
+
+    }else if(type === "error"){
+
+        box.style.background = "#fee2e2";
+        box.style.color = "#991b1b";
+
+    }else{
+
+        box.style.background = "#dbeafe";
+        box.style.color = "#1e40af";
+
+    }
+
+
+    setTimeout(() => {
+
+        box.style.display = "none";
+
+    }, 5000);
+
+}
+
+
+/* =========================================================
+   ADMIN PROTECTION
+========================================================= */
+
+async function checkAdmin(){
+
+    const result =
+        await supabaseClient.auth.getUser();
+
+
+    if(result.error || !result.data.user){
+
+        window.location.href = "index.html";
+
+        return false;
+    }
+
+
+    const user =
+        result.data.user;
+
+
+    const adminResult =
+        await supabaseClient
+            .from("admin_profiles")
+            .select("is_admin")
+            .eq("id", user.id)
+            .single();
+
+
+    if(
+        adminResult.error ||
+        !adminResult.data ||
+        adminResult.data.is_admin !== true
+    ){
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "index.html";
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/* =========================================================
+   LOAD SETTINGS
+========================================================= */
+
+async function loadSettings(){
+
+    const result =
+        await supabaseClient
+            .from("site_settings")
+            .select("*")
+            .limit(1)
+            .maybeSingle();
+
+
+    if(result.error){
+
+        console.error(result.error);
+
+        showMessage(
+            "Unable to load settings: " +
+            result.error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!result.data){
+
+        showMessage(
+            "No settings record was found.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const settings =
+        result.data;
+
+
+    settingsId =
+        settings.id;
+
+
+    /* GENERAL */
+
+    document.getElementById("siteName").value =
+        settings.site_name || "";
+
+    document.getElementById("tagline").value =
+        settings.tagline || "";
+
+    document.getElementById("siteDescription").value =
+        settings.site_description || "";
+
+    document.getElementById("logoUrl").value =
+        settings.logo_url || "";
+
+    document.getElementById("faviconUrl").value =
+        settings.favicon_url || "";
+
+
+    /* CONTACT */
+
+    document.getElementById("contactEmail").value =
+        settings.contact_email || "";
+
+
+    /* SOCIAL */
+
+    document.getElementById("twitterUrl").value =
+        settings.twitter_url || "";
+
+    document.getElementById("facebookUrl").value =
+        settings.facebook_url || "";
+
+    document.getElementById("instagramUrl").value =
+        settings.instagram_url || "";
+
+    document.getElementById("youtubeUrl").value =
+        settings.youtube_url || "";
+
+    document.getElementById("linkedinUrl").value =
+        settings.linkedin_url || "";
+
+    document.getElementById("tiktokUrl").value =
+        settings.tiktok_url || "";
+
+
+    /* SEO */
+
+    document.getElementById("seoTitle").value =
+        settings.seo_title || "";
+
+    document.getElementById("seoDescription").value =
+        settings.seo_description || "";
+
+
+    /* HOMEPAGE */
+
+    document.getElementById("articleLimit").value =
+        settings.homepage_article_limit || 12;
+
+
+    /* COMMENTS */
+
+    document.getElementById("commentsEnabled").checked =
+        settings.comments_enabled === true;
+
+}
+
+
+/* =========================================================
+   SAVE SETTINGS
+========================================================= */
+
+async function saveSettings(){
+
+    const saveButton =
+        document.getElementById("saveButton");
+
+
+    const siteName =
+        document.getElementById("siteName")
+            .value.trim();
+
+
+    if(!siteName){
+
+        showMessage(
+            "Site name is required.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const articleLimit =
+        parseInt(
+            document.getElementById("articleLimit").value,
+            10
+        );
+
+
+    if(
+        Number.isNaN(articleLimit) ||
+        articleLimit < 1 ||
+        articleLimit > 100
+    ){
+
+        showMessage(
+            "Homepage article limit must be between 1 and 100.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const updates = {
+
+        site_name:
+            siteName,
+
+        tagline:
+            document.getElementById("tagline")
+                .value.trim() || null,
+
+        site_description:
+            document.getElementById("siteDescription")
+                .value.trim() || null,
+
+        logo_url:
+            document.getElementById("logoUrl")
+                .value.trim() || null,
+
+        favicon_url:
+            document.getElementById("faviconUrl")
+                .value.trim() || null,
+
+        contact_email:
+            document.getElementById("contactEmail")
+                .value.trim() || null,
+
+        twitter_url:
+            document.getElementById("twitterUrl")
+                .value.trim() || null,
+
+        facebook_url:
+            document.getElementById("facebookUrl")
+                .value.trim() || null,
+
+        instagram_url:
+            document.getElementById("instagramUrl")
+                .value.trim() || null,
+
+        youtube_url:
+            document.getElementById("youtubeUrl")
+                .value.trim() || null,
+
+        linkedin_url:
+            document.getElementById("linkedinUrl")
+                .value.trim() || null,
+
+        tiktok_url:
+            document.getElementById("tiktokUrl")
+                .value.trim() || null,
+
+        seo_title:
+            document.getElementById("seoTitle")
+                .value.trim() || null,
+
+        seo_description:
+            document.getElementById("seoDescription")
+                .value.trim() || null,
+
+        homepage_article_limit:
+            articleLimit,
+
+        comments_enabled:
+            document.getElementById("commentsEnabled")
+                .checked
+
+    };
+
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+        "Saving...";
+
+
+    showMessage(
+        "Saving your settings...",
+        "info"
+    );
+
+
+    try{
+
+        let result;
+
+
+        /* =========================================
+           UPDATE EXISTING SETTINGS
+        ========================================= */
+
+        if(settingsId){
+
+            result =
+                await supabaseClient
+                    .from("site_settings")
+                    .update(updates)
+                    .eq("id", settingsId);
+
+        }
+
+
+        /* =========================================
+           CREATE SETTINGS IF NONE EXIST
+        ========================================= */
+
+        else{
+
+            result =
+                await supabaseClient
+                    .from("site_settings")
+                    .insert({
+
+                        ...updates,
+
+                        is_singleton:true
+
+                    })
+                    .select()
+                    .single();
+
+
+            if(result.data){
+
+                settingsId =
+                    result.data.id;
+
+            }
+
+        }
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+
+        showMessage(
+            "Settings saved successfully! ✅",
+            "success"
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "Unable to save settings: " +
+            error.message,
+            "error"
+        );
+
+    }finally{
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+            "💾 Save Settings";
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+document
+    .getElementById("saveButton")
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+document
+    .getElementById("logout")
+    .addEventListener(
+        "click",
+        async function(){
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "index.html";
+
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start(){
+
+    const allowed =
+        await checkAdmin();
+
+
+    if(!allowed){
+
+        return;
+
+    }
+
+
+    await loadSettings();
+
+}
+
+
+start();
+
+</script>
+
+</body>
+</html>
