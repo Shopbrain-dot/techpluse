@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Loading article... | TechPulse</title>
+
+    <meta
+        name="description"
+        id="metaDescription"
+        content="TechPulse technology news."
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        header {
+            background: #0b1220;
+            color: white;
+            padding: 18px 20px;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 18px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .article {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .featured-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            display: none;
+        }
+
+        .article-content {
+            padding: 35px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 42px;
+            line-height: 1.15;
+            margin: 0 0 15px;
+        }
+
+        .excerpt {
+            color: #6b7280;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            color: #6b7280;
+            font-size: 13px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 25px;
+        }
+
+        .content {
+            font-size: 17px;
+            line-height: 1.85;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .content img {
+            max-width: 100%;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .loading,
+        .error {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .error h2 {
+            margin-top: 0;
+        }
+
+        @media (max-width: 700px) {
+
+            main {
+                margin: 20px auto;
+            }
+
+            .article-content {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .excerpt {
+                font-size: 16px;
+            }
+
+            .content {
+                font-size: 16px;
+            }
+
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav a {
+                margin-left: 0;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+            Tech<span>Pulse</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="articles.html">Articles</a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <a href="index.html" class="back">
+        ← Back to TechPulse
+    </a>
+
+    <div id="loading" class="loading">
+        Loading article...
+    </div>
+
+    <article
+        id="article"
+        class="article"
+        style="display:none;"
+    >
+
+        <img
+            id="featuredImage"
+            class="featured-image"
+            alt=""
+        >
+
+        <div class="article-content">
+
+            <div
+                id="category"
+                class="category"
+                style="display:none;"
+            ></div>
+
+            <h1 id="title"></h1>
+
+            <div
+                id="excerpt"
+                class="excerpt"
+            ></div>
+
+            <div
+                id="meta"
+                class="meta"
+            ></div>
+
+            <div
+                id="content"
+                class="content"
+            ></div>
+
+        </div>
+
+    </article>
+
+    <div
+        id="error"
+        class="error"
+        style="display:none;"
+    >
+        <h2>Article not found</h2>
+        <p>
+            The article you're looking for does not exist
+            or is no longer published.
+        </p>
+
+        <a href="index.html">
+            Return to TechPulse
+        </a>
+    </div>
+
+</main>
+
+
+<script>
+
+    const loading =
+        document.getElementById("loading");
+
+    const articleBox =
+        document.getElementById("article");
+
+    const errorBox =
+        document.getElementById("error");
+
+    const title =
+        document.getElementById("title");
+
+    const excerpt =
+        document.getElementById("excerpt");
+
+    const content =
+        document.getElementById("content");
+
+    const category =
+        document.getElementById("category");
+
+    const meta =
+        document.getElementById("meta");
+
+    const featuredImage =
+        document.getElementById("featuredImage");
+
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    async function loadArticle() {
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const slug =
+            params.get("slug");
+
+
+        if (!slug) {
+
+            showError();
+
+            return;
+        }
+
+
+        const { data, error } =
+            await supabaseClient
+                .from("articles")
+                .select(`
+                    id,
+                    title,
+                    slug,
+                    excerpt,
+                    content,
+                    featured_image,
+                    status,
+                    views,
+                    created_at,
+                    published_at,
+                    categories (
+                        name
+                    ),
+                    authors (
+                        name
+                    )
+                `)
+                .eq("slug", slug)
+                .eq("status", "published")
+                .single();
+
+
+        if (error || !data) {
+
+            console.error(error);
+
+            showError();
+
+            return;
+        }
+
+
+        displayArticle(data);
+
+
+        /*
+         * Increase views.
+         *
+         * This uses the current view count and updates it.
+         * If your Supabase RLS blocks this update from public
+         * users, we can replace it with a secure RPC function.
+         */
+
+        const currentViews =
+            Number(data.views || 0);
+
+
+        await supabaseClient
+            .from("articles")
+            .update({
+                views: currentViews + 1
+            })
+            .eq("id", data.id);
+
+    }
+
+
+    function displayArticle(data) {
+
+        loading.style.display = "none";
+
+        articleBox.style.display = "block";
+
+
+        title.textContent =
+            data.title || "Untitled Article";
+
+
+        excerpt.textContent =
+            data.excerpt || "";
+
+
+        if (!data.excerpt) {
+
+            excerpt.style.display = "none";
+
+        }
+
+
+        /*
+         * Featured image
+         */
+
+        if (data.featured_image) {
+
+            featuredImage.src =
+                data.featured_image;
+
+            featuredImage.alt =
+                data.title || "TechPulse article";
+
+            featuredImage.style.display =
+                "block";
+
+        }
+
+
+        /*
+         * Category
+         */
+
+        const categoryName =
+            data.categories?.name;
+
+
+        if (categoryName) {
+
+            category.textContent =
+                categoryName;
+
+            category.style.display =
+                "inline-block";
+
+        }
+
+
+        /*
+         * Author
+         */
+
+        const authorName =
+            data.authors?.name ||
+            "TechPulse";
+
+
+        /*
+         * Date
+         */
+
+        const date =
+            data.published_at ||
+            data.created_at;
+
+
+        const formattedDate =
+            date
+                ? new Date(date)
+                    .toLocaleDateString(
+                        undefined,
+                        {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        }
+                    )
+                : "";
+
+
+        meta.textContent =
+            `By ${authorName} • ${formattedDate} • ${data.views || 0} views`;
+
+
+        /*
+         * Article content
+         *
+         * textContent is used so article content
+         * cannot inject arbitrary HTML/JavaScript.
+         */
+
+        content.textContent =
+            data.content || "";
+
+
+        /*
+         * Update browser title
+         */
+
+        document.title =
+            `${data.title} | TechPulse`;
+
+
+        /*
+         * SEO description
+         */
+
+        const metaDescription =
+            document.getElementById(
+                "metaDescription"
+            );
+
+
+        metaDescription.setAttribute(
+            "content",
+            data.excerpt ||
+            "Read the latest technology news on TechPulse."
+        );
+
+    }
+
+
+    function showError() {
+
+        loading.style.display =
+            "none";
+
+        articleBox.style.display =
+            "none";
+
+        errorBox.style.display =
+            "block";
+
+        document.title =
+            "Article Not Found | TechPulse";
+
+    }
+
+
+    loadArticle();
+
+</script>
+
+</body>
+</html>
