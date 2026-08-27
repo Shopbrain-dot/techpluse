@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TechPulse — The Pulse of Technology</title>
+
+    <meta name="description"
+        content="TechPulse brings you the latest news in AI, gadgets, startups, cybersecurity, gaming, and technology.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            color: #111827;
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 18px 5%;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            text-decoration: none;
+            color: #111827;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        nav {
+            display: flex;
+            gap: 22px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        .breaking {
+            background: #111827;
+            color: white;
+            padding: 12px 5%;
+        }
+
+        .breaking-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .breaking strong {
+            color: #60a5fa;
+            margin-right: 10px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 5%;
+        }
+
+        .hero {
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
+        .category {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            line-height: 1.1;
+            margin: 15px 0;
+        }
+
+        .hero p {
+            color: #6b7280;
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 750px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .card-image {
+            height: 180px;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card h3 {
+            font-size: 19px;
+            line-height: 1.35;
+            margin: 10px 0;
+        }
+
+        .card p {
+            color: #6b7280;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 60px;
+            background: #111827;
+            color: white;
+            padding: 40px 5%;
+            text-align: center;
+        }
+
+        footer p {
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 800px) {
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 28px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+
+            <a href="index.html" class="logo">
+                Tech<span>Pulse</span>
+            </a>
+
+            <nav>
+                <a href="#">AI</a>
+                <a href="#">Gadgets</a>
+                <a href="#">Startups</a>
+                <a href="#">Cybersecurity</a>
+                <a href="#">Gaming</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <div class="breaking">
+        <div class="breaking-container">
+            <strong>BREAKING</strong>
+            Welcome to TechPulse — The Pulse of Technology.
+        </div>
+    </div>
+
+    <main>
+
+        <section class="hero">
+
+            <div class="category">Featured Technology</div>
+
+            <h1>
+                Welcome to TechPulse
+            </h1>
+
+            <p>
+                Your destination for the latest technology news,
+                artificial intelligence, gadgets, startups,
+                cybersecurity, gaming and the future of tech.
+            </p>
+
+        </section>
+
+        <section>
+
+            <h2 class="section-title">
+                Latest News
+            </h2>
+
+            <div class="news-grid">
+
+                <article class="card">
+
+                    <div class="card-image">
+                        TECH NEWS
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="category">
+                            AI
+                        </div>
+
+                        <h3>
+                            The Future of Artificial Intelligence
+                        </h3>
+
+                        <p>
+                            Discover the latest developments shaping
+                            the world of artificial intelligence.
+                        </p>
+
+                    </div>
+
+                </article>
+
+                <article class="card">
+
+                    <div class="card-image">
+                        GADGETS
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="category">
+                            Gadgets
+                        </div>
+
+                        <h3>
+                            The Technology Changing Our Devices
+                        </h3>
+
+                        <p>
+                            Explore new technologies changing the way
+                            people use smartphones and computers.
+                        </p>
+
+                    </div>
+
+                </article>
+
+                <article class="card">
+
+                    <div class="card-image">
+                        STARTUPS
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="category">
+                            Startups
+                        </div>
+
+                        <h3>
+                            The Next Generation of Tech Startups
+                        </h3>
+
+                        <p>
+                            Follow the companies building the future
+                            of technology.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <strong>TechPulse</strong>
+
+        <p>
+            The Pulse of Technology.
+        </p>
+
+        <p>
+            © 2026 TechPulse. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>
