@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TechPulse Admin Login</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                radial-gradient(circle at top, #dbeafe, transparent 40%),
+                #f4f7fb;
+
+            color: #111827;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 38px;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .08);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 31px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 8px;
+            margin-bottom: 30px;
+        }
+
+        .admin-badge {
+            width: fit-content;
+            margin: 0 auto 25px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+
+            font-size: 15px;
+            outline: none;
+
+            margin-bottom: 18px;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 75px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+
+            border: 0;
+            background: transparent;
+
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .login-button {
+            width: 100%;
+            border: 0;
+
+            background: #2563eb;
+            color: white;
+
+            padding: 14px;
+            border-radius: 10px;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .login-button:hover {
+            background: #1d4ed8;
+        }
+
+        .login-button:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+        }
+
+        #message {
+            display: none;
+
+            margin-top: 16px;
+            padding: 11px;
+
+            border-radius: 8px;
+
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .forgot {
+            display: block;
+
+            margin-top: 18px;
+
+            text-align: center;
+
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .back {
+            display: block;
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: #6b7280;
+            font-size: 13px;
+
+            text-decoration: none;
+        }
+
+        .back:hover,
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .security {
+            margin-top: 25px;
+            padding-top: 20px;
+
+            border-top: 1px solid #e5e7eb;
+
+            text-align: center;
+
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-box">
+
+        <div class="logo">
+            Tech<span>Pulse</span>
+        </div>
+
+        <p class="subtitle">
+            Admin Dashboard
+        </p>
+
+        <div class="admin-badge">
+            🔐 ADMIN ACCESS
+        </div>
+
+        <form id="loginForm">
+
+            <label for="email">
+                Email address
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your admin email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="show-password"
+                    id="showPassword"
+                >
+                    Show
+                </button>
+
+            </div>
+
+            <button
+                type="submit"
+                class="login-button"
+                id="loginButton"
+            >
+                Sign In
+            </button>
+
+        </form>
+
+        <div id="message"></div>
+
+        <a href="#" class="forgot" id="forgotPassword">
+            Forgot password?
+        </a>
+
+        <a href="../index.html" class="back">
+            ← Back to TechPulse
+        </a>
+
+        <div class="security">
+            🔒 Secure administrator authentication powered by Supabase
+        </div>
+
+    </main>
+
+    <script>
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const emailInput =
+            document.getElementById("email");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const message =
+            document.getElementById("message");
+
+        const showPassword =
+            document.getElementById("showPassword");
+
+        const forgotPassword =
+            document.getElementById("forgotPassword");
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        function showMessage(text, type) {
+
+            message.textContent = text;
+            message.style.display = "block";
+
+            if (type === "error") {
+                message.style.background = "#fef2f2";
+                message.style.color = "#dc2626";
+            }
+
+            if (type === "success") {
+                message.style.background = "#f0fdf4";
+                message.style.color = "#16a34a";
+            }
+
+            if (type === "info") {
+                message.style.background = "#eff6ff";
+                message.style.color = "#2563eb";
+            }
+        }
+
+
+        /* =========================
+           SHOW PASSWORD
+        ========================= */
+
+        showPassword.addEventListener("click", function () {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+                showPassword.textContent = "Hide";
+
+            } else {
+
+                passwordInput.type = "password";
+                showPassword.textContent = "Show";
+
+            }
+
+        });
+
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        loginForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const email =
+                emailInput.value.trim();
+
+            const password =
+                passwordInput.value;
+
+            if (!email || !password) {
+
+                showMessage(
+                    "Please enter your email and password.",
+                    "error"
+                );
+
+                return;
+            }
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing in...";
+
+            showMessage(
+                "Authenticating your account...",
+                "info"
+            );
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                if (!data.user) {
+
+                    throw new Error(
+                        "Unable to verify your account."
+                    );
+
+                }
+
+
+                /* =========================
+                   CHECK ADMIN STATUS
+                ========================= */
+
+                const { data: admin, error: adminError } =
+                    await supabaseClient
+                        .from("admin_profiles")
+                        .select("is_admin, full_name")
+                        .eq("id", data.user.id)
+                        .single();
+
+
+                if (adminError || !admin || admin.is_admin !== true) {
+
+                    await supabaseClient.auth.signOut();
+
+                    throw new Error(
+                        "This account does not have administrator access."
+                    );
+
+                }
+
+
+                /* =========================
+                   SUCCESS
+                ========================= */
+
+                showMessage(
+                    "Login successful. Opening dashboard...",
+                    "success"
+                );
+
+                setTimeout(function () {
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }, 500);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    error.message ||
+                    "Unable to sign in. Please try again.",
+                    "error"
+                );
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Sign In";
+
+            }
+
+        });
+
+
+        /* =========================
+           FORGOT PASSWORD
+        ========================= */
+
+        forgotPassword.addEventListener("click", async function (event) {
+
+            event.preventDefault();
+
+            const email =
+                emailInput.value.trim();
+
+            if (!email) {
+
+                showMessage(
+                    "Enter your admin email first.",
+                    "error"
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+            showMessage(
+                "Sending password reset email...",
+                "info"
+            );
+
+            try {
+
+                const { error } =
+                    await supabaseClient.auth.resetPasswordForEmail(
+                        email,
+                        {
+                            redirectTo:
+                                window.location.origin +
+                                "/admin/reset-password.html"
+                        }
+                    );
+
+                if (error) {
+                    throw error;
+                }
+
+                showMessage(
+                    "If this email belongs to an account, a password reset link has been sent.",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    error.message ||
+                    "Unable to send password reset email.",
+                    "error"
+                );
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
