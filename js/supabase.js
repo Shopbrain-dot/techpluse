@@ -1,5 +1,3 @@
-// TechPulse Supabase configuration
-
 (function () {
     "use strict";
 
@@ -9,31 +7,46 @@
     const SUPABASE_KEY =
         "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
 
-    // Make sure Supabase CDN loaded
-    if (!window.supabase) {
-        console.error(
-            "Supabase CDN did not load."
-        );
-        return;
-    }
+    function initializeSupabase() {
 
-    try {
+        if (!window.supabase) {
+            console.error(
+                "Supabase library has not loaded yet."
+            );
+            return;
+        }
 
-        window.supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_KEY
+        try {
+
+            window.supabaseClient =
+                window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_KEY
+                );
+
+            console.log(
+                "TechPulse Supabase client created successfully."
             );
 
-        console.log(
-            "TechPulse Supabase client created successfully."
-        );
+        } catch (error) {
 
-    } catch (error) {
+            console.error(
+                "Supabase client creation failed:",
+                error
+            );
 
-        console.error(
-            "Failed to create Supabase client:",
-            error
+        }
+    }
+
+    if (window.supabase) {
+
+        initializeSupabase();
+
+    } else {
+
+        window.addEventListener(
+            "load",
+            initializeSupabase
         );
 
     }
