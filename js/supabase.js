@@ -4,13 +4,30 @@ const SUPABASE_KEY =
     "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
 
 if (!window.supabase) {
-    console.error("Supabase library not loaded.");
+    window.supabaseInitError =
+        "Supabase library was not loaded.";
+    console.error(window.supabaseInitError);
 } else {
-    window.supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
+    try {
+        window.supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+        console.log(
+            "Supabase client created:",
+            !!window.supabaseClient
         );
 
-    console.log("Supabase client created successfully.");
+    } catch (error) {
+
+        window.supabaseInitError =
+            error.message;
+
+        console.error(
+            "Supabase client creation failed:",
+            error
+        );
+    }
 }
