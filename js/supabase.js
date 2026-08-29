@@ -1,54 +1,40 @@
-(function () {
-    "use strict";
+"use strict";
 
-    const SUPABASE_URL =
-        "https://uadixswmymsturrephhq.supabase.co";
+const SUPABASE_URL =
+    "https://uadixswmymsturrephhq.supabase.co";
 
-    const SUPABASE_KEY =
-        "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
+const SUPABASE_KEY =
+    "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
 
-    function initializeSupabase() {
+try {
 
-        if (!window.supabase) {
-            console.error(
-                "Supabase library has not loaded yet."
-            );
-            return;
-        }
+    if (!window.supabase) {
 
-        try {
-
-            window.supabaseClient =
-                window.supabase.createClient(
-                    SUPABASE_URL,
-                    SUPABASE_KEY
-                );
-
-            console.log(
-                "TechPulse Supabase client created successfully."
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Supabase client creation failed:",
-                error
-            );
-
-        }
-    }
-
-    if (window.supabase) {
-
-        initializeSupabase();
-
-    } else {
-
-        window.addEventListener(
-            "load",
-            initializeSupabase
+        throw new Error(
+            "Supabase library did not load before js/supabase.js."
         );
 
     }
 
-})();
+    window.supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+    console.log(
+        "Supabase client created successfully."
+    );
+
+} catch (error) {
+
+    window.supabaseInitError =
+        error.message ||
+        "Unknown Supabase initialization error.";
+
+    console.error(
+        "Supabase initialization failed:",
+        error
+    );
+
+}
