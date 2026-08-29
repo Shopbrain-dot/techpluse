@@ -1,0 +1,40 @@
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+<script>
+window.addEventListener("load", function () {
+
+    if (!window.supabase) {
+        console.error("Supabase library failed to load.");
+        return;
+    }
+
+    const SUPABASE_URL =
+        "https://uadixswmymsturrephhq.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
+
+    try {
+
+        window.supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+        console.log(
+            "Supabase client ready:",
+            !!window.supabaseClient
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Supabase client creation failed:",
+            error
+        );
+
+    }
+
+});
+</script>
