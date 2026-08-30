@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title id="pageTitleTag">Article | TechPulse</title>
+
+<meta
+    id="metaDescription"
+    name="description"
+    content="Read the latest technology news on TechPulse."
+>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+<script src="js/supabase.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fa;
+    color:#111827;
+    line-height:1.5;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* HEADER */
+
+header{
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.header{
+    max-width:900px;
+    min-height:72px;
+    margin:auto;
+    padding:0 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:#2563eb;
+}
+
+.back-link{
+    color:#2563eb;
+    font-weight:800;
+    font-size:14px;
+}
+
+/* PAGE */
+
+main{
+    max-width:900px;
+    margin:30px auto 60px;
+    padding:0 20px;
+}
+
+.reader-box{
+    background:#fffdf5;
+    color:#171717;
+    border-radius:6px;
+    box-shadow:0 10px 40px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+
+.reader-header{
+    text-align:center;
+    padding:28px 35px 18px;
+    border-bottom:3px double #222;
+}
+
+.reader-brand{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:4px;
+    text-transform:uppercase;
+}
+
+.reader-date{
+    margin-top:8px;
+    color:#555;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:12px;
+}
+
+.reader-content{
+    padding:35px 55px 45px;
+}
+
+.reader-category{
+    text-align:center;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    color:#2563eb;
+}
+
+.reader-content h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:46px;
+    line-height:1.05;
+    text-align:center;
+    margin:8px auto 15px;
+    max-width:800px;
+}
+
+.reader-subtitle{
+    font-family:Georgia,"Times New Roman",serif;
+    color:#555;
+    font-size:18px;
+    line-height:1.5;
+    text-align:center;
+    max-width:720px;
+    margin:0 auto 18px;
+}
+
+.reader-meta{
+    text-align:center;
+    font-size:12px;
+    color:#777;
+    border-top:1px solid #bbb;
+    border-bottom:1px solid #bbb;
+    padding:9px 0;
+    margin:20px auto 25px;
+    max-width:700px;
+}
+
+.reader-image-wrap{
+    display:none;
+    margin:22px 0 26px;
+}
+
+.reader-image-wrap img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:2px;
+}
+
+.reader-body{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:18px;
+    line-height:1.8;
+    color:#202020;
+}
+
+.reader-body::first-letter{
+    font-size:54px;
+    float:left;
+    line-height:.8;
+    padding-right:7px;
+    font-weight:bold;
+}
+
+.reader-body p{
+    margin-bottom:18px;
+}
+
+.reader-body img{
+    max-width:100%;
+    height:auto;
+    display:block;
+    margin:20px auto;
+}
+
+/* SHARE BAR */
+
+.share-bar{
+    margin-top:35px;
+    padding-top:22px;
+    border-top:3px double #222;
+    text-align:center;
+}
+
+.share-title{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:bold;
+    margin-bottom:13px;
+}
+
+.share-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.share-buttons button,
+.share-buttons a{
+    border:1px solid #ccc;
+    background:#fff;
+    color:#222;
+    padding:9px 13px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.share-buttons button:hover,
+.share-buttons a:hover{
+    background:#f1f1f1;
+}
+
+.share-whatsapp{
+    color:#128c7e !important;
+}
+
+.share-facebook{
+    color:#1877f2 !important;
+}
+
+.share-x{
+    color:#111 !important;
+}
+
+.share-copy{
+    color:#444 !important;
+}
+
+.share-native{
+    color:#2563eb !important;
+}
+
+/* STATE MESSAGES */
+
+.state-box{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:60px 30px;
+    text-align:center;
+    color:#6b7280;
+}
+
+.state-box h1{
+    font-size:26px;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.state-box a{
+    display:inline-block;
+    margin-top:18px;
+    background:#2563eb;
+    color:white;
+    padding:11px 18px;
+    border-radius:8px;
+    font-weight:800;
+}
+
+/* FOOTER */
+
+footer{
+    background:#0b1220;
+    color:#9ca3af;
+    padding:30px 20px;
+    text-align:center;
+    font-size:13px;
+}
+
+footer a{
+    color:#60a5fa;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    main{
+        margin-top:20px;
+        padding:0 12px;
+    }
+
+    .reader-header{
+        padding:22px 18px 14px;
+    }
+
+    .reader-content{
+        padding:24px 18px 35px;
+    }
+
+    .reader-content h1{
+        font-size:30px;
+    }
+
+    .reader-subtitle{
+        font-size:16px;
+    }
+
+    .reader-body{
+        font-size:17px;
+        line-height:1.75;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="header">
+
+<a href="index.html" class="logo">
+Tech<span>Pulse</span>
+</a>
+
+<a href="index.html" class="back-link">
+← Back to TechPulse
+</a>
+
+</div>
+
+</header>
+
+
+<main id="pageContent">
+
+<div class="state-box">
+
+<h1>
+Loading article...
+</h1>
+
+<p>
+Please wait while TechPulse loads this story.
+</p>
+
+</div>
+
+</main>
+
+
+<footer>
+© 2026 TechPulse. All rights reserved. ·
+<a href="index.html">Back to homepage</a>
+</footer>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+function getSupabase(){
+
+    if(!window.supabase){
+
+        throw new Error(
+            "Supabase library did not load."
+        );
+
+    }
+
+    if(!window.supabaseClient){
+
+        throw new Error(
+            "Supabase client was not created. Check js/supabase.js."
+        );
+
+    }
+
+    return window.supabaseClient;
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function getPlainText(html){
+
+    const div =
+        document.createElement("div");
+
+    div.innerHTML =
+        html || "";
+
+    return div.textContent ||
+        div.innerText ||
+        "";
+
+}
+
+
+function articleTitle(article){
+
+    return article.title ||
+        "Untitled Article";
+
+}
+
+
+function articleExcerpt(article){
+
+    return article.excerpt ||
+        getPlainText(article.content).substring(0,180) ||
+        "";
+
+}
+
+
+function articleCategory(article){
+
+    if(
+        article.categories &&
+        article.categories.name
+    ){
+
+        return article.categories.name;
+
+    }
+
+    return "Technology";
+
+}
+
+
+function articleAuthor(article){
+
+    if(
+        article.authors &&
+        article.authors.name
+    ){
+
+        return article.authors.name;
+
+    }
+
+    return "TechPulse";
+
+}
+
+
+function articleDate(article){
+
+    const value =
+        article.published_at ||
+        article.created_at;
+
+    if(!value){
+        return "";
+    }
+
+    const date =
+        new Date(value);
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+
+}
+
+
+function getRequestedIdentifier(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return params.get("slug") ||
+        params.get("article") ||
+        params.get("id");
+
+}
+
+
+/* =====================================================
+   RENDER STATES
+===================================================== */
+
+function renderNotFound(){
+
+    document.getElementById(
+        "pageContent"
+    ).innerHTML = `
+
+        <div class="state-box">
+
+            <h1>
+                Article not found
+            </h1>
+
+            <p>
+                Sorry, we couldn't find the article you're looking for.
+            </p>
+
+            <a href="index.html">
+                Back to TechPulse
+            </a>
+
+        </div>
+    `;
+
+}
+
+
+function renderError(message){
+
+    document.getElementById(
+        "pageContent"
+    ).innerHTML = `
+
+        <div class="state-box">
+
+            <h1>
+                Unable to load article
+            </h1>
+
+            <p>
+                ${escapeHtml(message)}
+            </p>
+
+            <a href="index.html">
+                Back to TechPulse
+            </a>
+
+        </div>
+    `;
+
+}
+
+
+/* =====================================================
+   RENDER ARTICLE
+===================================================== */
+
+function renderArticle(article){
+
+    document.getElementById(
+        "pageTitleTag"
+    ).textContent =
+        articleTitle(article) +
+        " | TechPulse";
+
+
+    document.getElementById(
+        "metaDescription"
+    ).setAttribute(
+        "content",
+        articleExcerpt(article)
+    );
+
+
+    const imageUrl =
+        article.featured_image ||
+        "";
+
+
+    const dateText =
+        articleDate(article);
+
+
+    document.getElementById(
+        "pageContent"
+    ).innerHTML = `
+
+        <div class="reader-box">
+
+            <div class="reader-header">
+
+                <div class="reader-brand">
+                    TECHPULSE
+                </div>
+
+                <div class="reader-date">
+                    ${
+                        dateText
+                            ? escapeHtml(dateText)
+                            : "The Pulse of Technology"
+                    }
+                </div>
+
+            </div>
+
+            <div class="reader-content">
+
+                <div class="reader-category">
+                    ${escapeHtml(articleCategory(article))}
+                </div>
+
+                <h1>
+                    ${escapeHtml(articleTitle(article))}
+                </h1>
+
+                <div class="reader-subtitle">
+                    ${escapeHtml(articleExcerpt(article))}
+                </div>
+
+                <div class="reader-meta">
+                    ${escapeHtml(articleAuthor(article))}
+                    •
+                    ${escapeHtml(dateText)}
+                </div>
+
+                <div
+                    class="reader-image-wrap"
+                    style="${
+                        imageUrl
+                            ? "display:block;"
+                            : "display:none;"
+                    }"
+                >
+                    <img
+                        src="${escapeHtml(imageUrl)}"
+                        alt="${escapeHtml(articleTitle(article))}"
+                    >
+                </div>
+
+                <div class="reader-body">
+                    ${
+                        article.content ||
+                        "<p>No article content available.</p>"
+                    }
+                </div>
+
+                <div class="share-bar">
+
+                    <div class="share-title">
+                        Share this story
+                    </div>
+
+                    <div class="share-buttons">
+
+                        <a
+                            id="shareWhatsApp"
+                            class="share-whatsapp"
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            WhatsApp
+                        </a>
+
+                        <a
+                            id="shareFacebook"
+                            class="share-facebook"
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Facebook
+                        </a>
+
+                        <a
+                            id="shareX"
+                            class="share-x"
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            X
+                        </a>
+
+                        <button
+                            id="copyLink"
+                            class="share-copy"
+                            type="button"
+                        >
+                            Copy Link
+                        </button>
+
+                        <button
+                            id="nativeShare"
+                            class="share-native"
+                            type="button"
+                            style="display:none;"
+                        >
+                            Share
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="copyMessage"
+                        style="
+                            margin-top:10px;
+                            font-size:13px;
+                            color:#555;
+                            min-height:18px;
+                        "
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+
+    setupShareLinks(
+        article
+    );
+
+}
+
+
+/* =====================================================
+   SHARING
+===================================================== */
+
+function setupShareLinks(article){
+
+    const identifier =
+        article.slug ||
+        article.id;
+
+    const url =
+        window.location.origin +
+        window.location.pathname.replace(
+            /article\.html$/,
+            "article.html"
+        ) +
+        "?slug=" +
+        encodeURIComponent(
+            identifier
+        );
+
+
+    const title =
+        articleTitle(article);
+
+
+    document.getElementById(
+        "shareWhatsApp"
+    ).href =
+        "https://wa.me/?text=" +
+        encodeURIComponent(
+            title +
+            "\n\n" +
+            url
+        );
+
+
+    document.getElementById(
+        "shareFacebook"
+    ).href =
+        "https://www.facebook.com/sharer/sharer.php?u=" +
+        encodeURIComponent(url);
+
+
+    document.getElementById(
+        "shareX"
+    ).href =
+        "https://twitter.com/intent/tweet?text=" +
+        encodeURIComponent(title) +
+        "&url=" +
+        encodeURIComponent(url);
+
+
+    document.getElementById(
+        "copyLink"
+    ).onclick =
+        async function(){
+
+            try{
+
+                await navigator.clipboard.writeText(
+                    url
+                );
+
+                document.getElementById(
+                    "copyMessage"
+                ).textContent =
+                    "Article link copied!";
+
+            }catch{
+
+                document.getElementById(
+                    "copyMessage"
+                ).textContent =
+                    "Copy failed. Long-press the link to copy it.";
+
+            }
+
+        };
+
+
+    const nativeShare =
+        document.getElementById(
+            "nativeShare"
+        );
+
+
+    if(navigator.share){
+
+        nativeShare.style.display =
+            "inline-block";
+
+
+        nativeShare.onclick =
+            async function(){
+
+                try{
+
+                    await navigator.share({
+
+                        title:title,
+
+                        text:
+                            articleExcerpt(article),
+
+                        url:url
+
+                    });
+
+                }catch(error){
+
+                    if(
+                        error.name !==
+                        "AbortError"
+                    ){
+
+                        console.error(error);
+
+                    }
+
+                }
+
+            };
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD ARTICLE
+===================================================== */
+
+async function loadArticle(){
+
+    const identifier =
+        getRequestedIdentifier();
+
+
+    if(!identifier){
+
+        renderNotFound();
+
+        return;
+
+    }
+
+
+    try{
+
+        const client =
+            getSupabase();
+
+
+        const isUuid =
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+                identifier
+            );
+
+
+        const query =
+            client
+                .from("articles")
+                .select(`
+                    id,
+                    title,
+                    slug,
+                    content,
+                    excerpt,
+                    featured_image,
+                    status,
+                    created_at,
+                    published_at,
+                    categories (
+                        name
+                    ),
+                    authors (
+                        name
+                    )
+                `)
+                .eq(
+                    "status",
+                    "published"
+                );
+
+
+        const {
+            data,
+            error
+        } =
+        await (
+            isUuid
+                ? query.eq("id",identifier)
+                : query.eq("slug",identifier)
+        ).maybeSingle();
+
+
+        if(error){
+
+            throw new Error(
+                error.message
+            );
+
+        }
+
+
+        if(!data){
+
+            renderNotFound();
+
+            return;
+
+        }
+
+
+        renderArticle(
+            data
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Article load error:",
+            error
+        );
+
+        renderError(
+            error.message
+        );
+
+    }
+
+}
+
+
+loadArticle();
+
+</script>
+
+</body>
+</html>
