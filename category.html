@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title id="pageTitleTag">Category | TechPulse</title>
+
+<meta
+    id="metaDescription"
+    name="description"
+    content="Browse TechPulse articles by category."
+>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+<script src="js/supabase.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fa;
+    color:#111827;
+    line-height:1.5;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* HEADER */
+
+header{
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.header{
+    max-width:1250px;
+    min-height:72px;
+    margin:auto;
+    padding:0 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:#2563eb;
+}
+
+.back-link{
+    color:#2563eb;
+    font-weight:800;
+    font-size:14px;
+}
+
+/* MAIN */
+
+main{
+    max-width:1250px;
+    margin:35px auto 60px;
+    padding:0 20px;
+}
+
+.page-heading{
+    margin-bottom:28px;
+}
+
+.page-heading .eyebrow{
+    color:#2563eb;
+    font-size:12px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    margin-bottom:6px;
+}
+
+.page-heading h1{
+    font-size:34px;
+}
+
+.page-heading p{
+    color:#6b7280;
+    margin-top:8px;
+    font-size:14px;
+}
+
+/* NEWS GRID (same styling as homepage cards) */
+
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    overflow:hidden;
+    transition:.2s ease;
+    cursor:pointer;
+    display:block;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.card-image{
+    height:190px;
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #e5e7eb
+        );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b7280;
+    font-weight:800;
+    font-size:13px;
+    overflow:hidden;
+}
+
+.card-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.card-content{
+    padding:19px;
+}
+
+.card .tag{
+    color:#2563eb;
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+}
+
+.card h3{
+    font-size:19px;
+    line-height:1.3;
+    margin:7px 0 10px;
+}
+
+.card p{
+    color:#6b7280;
+    font-size:14px;
+}
+
+.card .meta{
+    color:#9ca3af;
+    font-size:12px;
+    margin-top:14px;
+}
+
+.read-more{
+    display:inline-block;
+    margin-top:13px;
+    color:#2563eb;
+    font-size:13px;
+    font-weight:800;
+}
+
+.loading,
+.no-content{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    color:#6b7280;
+}
+
+.no-content{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+}
+
+.no-content a{
+    display:inline-block;
+    margin-top:15px;
+    background:#2563eb;
+    color:white;
+    padding:11px 18px;
+    border-radius:8px;
+    font-weight:800;
+}
+
+/* FOOTER */
+
+footer{
+    background:#0b1220;
+    color:#9ca3af;
+    padding:30px 20px;
+    text-align:center;
+    font-size:13px;
+}
+
+footer a{
+    color:#60a5fa;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+    .news-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header{
+        min-height:64px;
+    }
+
+    .logo{
+        font-size:24px;
+    }
+
+    main{
+        margin-top:22px;
+    }
+
+    .page-heading h1{
+        font-size:26px;
+    }
+
+    .news-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="header">
+
+<a href="index.html" class="logo">
+Tech<span>Pulse</span>
+</a>
+
+<a href="index.html" class="back-link">
+← Back to TechPulse
+</a>
+
+</div>
+
+</header>
+
+
+<main>
+
+<div class="page-heading">
+
+<div class="eyebrow">
+Category
+</div>
+
+<h1 id="categoryTitle">
+Loading category...
+</h1>
+
+<p id="categoryCount"></p>
+
+</div>
+
+
+<div
+    class="news-grid"
+    id="categoryGrid">
+
+<div class="loading">
+Loading articles...
+</div>
+
+</div>
+
+</main>
+
+
+<footer>
+© 2026 TechPulse. All rights reserved. ·
+<a href="index.html">Back to homepage</a>
+</footer>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+function getSupabase(){
+
+    if(!window.supabase){
+
+        throw new Error(
+            "Supabase library did not load."
+        );
+
+    }
+
+    if(!window.supabaseClient){
+
+        throw new Error(
+            "Supabase client was not created. Check js/supabase.js."
+        );
+
+    }
+
+    return window.supabaseClient;
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function getPlainText(html){
+
+    const div =
+        document.createElement("div");
+
+    div.innerHTML =
+        html || "";
+
+    return div.textContent ||
+        div.innerText ||
+        "";
+
+}
+
+
+function articleTitle(article){
+
+    return article.title ||
+        "Untitled Article";
+
+}
+
+
+function articleExcerpt(article){
+
+    return article.excerpt ||
+        getPlainText(article.content).substring(0,180) ||
+        "";
+
+}
+
+
+function articleAuthor(article){
+
+    if(
+        article.authors &&
+        article.authors.name
+    ){
+
+        return article.authors.name;
+
+    }
+
+    return "TechPulse";
+
+}
+
+
+function articleDate(article){
+
+    const value =
+        article.published_at ||
+        article.created_at;
+
+    if(!value){
+        return "";
+    }
+
+    const date =
+        new Date(value);
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+
+}
+
+
+function articleUrl(article){
+
+    if(article.slug){
+
+        return "article.html?slug=" +
+            encodeURIComponent(
+                article.slug
+            );
+
+    }
+
+    return "article.html?id=" +
+        encodeURIComponent(
+            article.id
+        );
+
+}
+
+
+function getRequestedCategory(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return params.get("name") ||
+        params.get("category");
+
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+function createCard(article){
+
+    const card =
+        document.createElement("a");
+
+    card.className =
+        "card";
+
+    card.href =
+        articleUrl(article);
+
+
+    card.innerHTML = `
+
+        <div class="card-image">
+            ${
+                article.featured_image
+                    ? `<img
+                        src="${escapeHtml(article.featured_image)}"
+                        alt="${escapeHtml(articleTitle(article))}"
+                        loading="lazy"
+                    >`
+                    : "TECHPULSE"
+            }
+        </div>
+
+        <div class="card-content">
+
+            <h3>
+                ${escapeHtml(articleTitle(article))}
+            </h3>
+
+            <p>
+                ${escapeHtml(
+                    articleExcerpt(article)
+                        .substring(0,180)
+                )}
+            </p>
+
+            <div class="meta">
+                ${escapeHtml(articleAuthor(article))}
+                •
+                ${escapeHtml(articleDate(article))}
+            </div>
+
+            <span class="read-more">
+                Read full story →
+            </span>
+
+        </div>
+    `;
+
+
+    return card;
+
+}
+
+
+/* =====================================================
+   LOAD CATEGORY ARTICLES
+===================================================== */
+
+async function loadCategory(){
+
+    const categoryName =
+        getRequestedCategory();
+
+
+    const grid =
+        document.getElementById(
+            "categoryGrid"
+        );
+
+
+    if(!categoryName){
+
+        document.getElementById(
+            "categoryTitle"
+        ).textContent =
+            "Category not specified";
+
+        grid.innerHTML = `
+            <div class="no-content">
+                <h3>No category selected</h3>
+                <p style="margin-top:8px;">
+                    Pick a category from the TechPulse homepage.
+                </p>
+                <a href="index.html">
+                    Back to TechPulse
+                </a>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "categoryTitle"
+    ).textContent =
+        categoryName;
+
+    document.getElementById(
+        "pageTitleTag"
+    ).textContent =
+        categoryName +
+        " | TechPulse";
+
+    document.getElementById(
+        "metaDescription"
+    ).setAttribute(
+        "content",
+        "Browse the latest " +
+        categoryName +
+        " articles on TechPulse."
+    );
+
+
+    try{
+
+        const client =
+            getSupabase();
+
+
+        const {
+            data,
+            error
+        } =
+        await client
+            .from("articles")
+            .select(`
+                id,
+                title,
+                slug,
+                content,
+                excerpt,
+                featured_image,
+                status,
+                created_at,
+                published_at,
+                categories!inner (
+                    name
+                ),
+                authors (
+                    name
+                )
+            `)
+            .eq("status","published")
+            .eq("categories.name",categoryName)
+            .order("published_at",{
+                ascending:false,
+                nullsFirst:false
+            });
+
+
+        if(error){
+
+            throw new Error(
+                error.message
+            );
+
+        }
+
+
+        const articles =
+            data || [];
+
+
+        document.getElementById(
+            "categoryCount"
+        ).textContent =
+            articles.length +
+            (
+                articles.length === 1
+                    ? " article"
+                    : " articles"
+            ) +
+            " in this category";
+
+
+        if(!articles.length){
+
+            grid.innerHTML = `
+                <div class="no-content">
+                    <h3>No articles in this category yet</h3>
+                    <p style="margin-top:8px;">
+                        Check back soon, or explore other categories from the homepage.
+                    </p>
+                    <a href="index.html">
+                        Back to TechPulse
+                    </a>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        grid.innerHTML =
+            "";
+
+
+        articles.forEach(
+            function(article){
+
+                grid.appendChild(
+                    createCard(article)
+                );
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Category load error:",
+            error
+        );
+
+        grid.innerHTML = `
+            <div class="no-content">
+                <h3>Unable to load this category</h3>
+                <p style="margin-top:8px;">
+                    ${escapeHtml(error.message)}
+                </p>
+                <a href="index.html">
+                    Back to TechPulse
+                </a>
+            </div>
+        `;
+
+    }
+
+}
+
+
+loadCategory();
+
+</script>
+
+</body>
+</html>
