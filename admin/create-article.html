@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Article | TechPulse</title>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+<script>
+(function () {
+
+    if (!window.supabase) {
+        console.error("Supabase library failed to load.");
+        window.supabaseInitError =
+            "Supabase library failed to load.";
+        return;
+    }
+
+    const SUPABASE_URL =
+        "https://uadixswmymsturrephhq.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_2UO1rGLY4h4XQ7OazgElcw_opq_ZWUX";
+
+    try {
+
+        window.supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+        console.log(
+            "Supabase client ready:",
+            !!window.supabaseClient
+        );
+
+    } catch (error) {
+
+        window.supabaseInitError =
+            error.message;
+
+        console.error(
+            "Supabase client creation failed:",
+            error
+        );
+
+    }
+
+})();
+</script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fb;
+    color:#111827;
+}
+
+.layout{
+    min-height:100vh;
+    display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:250px;
+    background:#0b1220;
+    color:white;
+    padding:24px 16px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    padding:0 12px;
+    margin-bottom:35px;
+}
+
+.logo span{
+    color:#60a5fa;
+}
+
+.admin-label{
+    padding:0 12px;
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.nav-item{
+    display:block;
+    padding:12px;
+    margin-bottom:5px;
+    border-radius:9px;
+    color:#cbd5e1;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:700;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    background:#1e293b;
+    color:white;
+}
+
+.back{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:65px;
+}
+
+.logout{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:20px;
+    width:calc(100% - 32px);
+    border:0;
+    background:#1e293b;
+    color:#cbd5e1;
+    padding:12px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.logout:hover{
+    background:#334155;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+    max-width:1200px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:20px;
+}
+
+.header h1{
+    font-size:30px;
+}
+
+.header p{
+    color:#6b7280;
+    margin-top:6px;
+    font-size:14px;
+}
+
+.back-button{
+    background:#e5e7eb;
+    color:#111827;
+    text-decoration:none;
+    padding:11px 16px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:800;
+}
+
+/* FORM */
+
+.form-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:25px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.required{
+    color:#dc2626;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    outline:none;
+    background:white;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#2563eb;
+}
+
+textarea{
+    min-height:300px;
+    resize:vertical;
+    line-height:1.6;
+}
+
+#excerpt{
+    min-height:110px;
+}
+
+.editor-toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:8px;
+}
+
+.editor-btn{
+    border:1px solid #d1d5db;
+    background:#f9fafb;
+    color:#111827;
+    padding:8px 12px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.editor-btn:hover{
+    background:#eef2ff;
+    border-color:#2563eb;
+    color:#2563eb;
+}
+
+.help{
+    margin-top:6px;
+    color:#6b7280;
+    font-size:12px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.status-row{
+    display:flex;
+    gap:10px;
+}
+
+.status-option{
+    flex:1;
+}
+
+.status-option input{
+    display:none;
+}
+
+.status-option label{
+    display:block;
+    padding:13px;
+    text-align:center;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:800;
+}
+
+.status-option input:checked + label{
+    background:#2563eb;
+    color:white;
+    border-color:#2563eb;
+}
+
+/* ACTIONS */
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    padding-top:10px;
+    border-top:1px solid #e5e7eb;
+}
+
+.cancel{
+    padding:13px 20px;
+    border-radius:8px;
+    background:#e5e7eb;
+    color:#111827;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:800;
+}
+
+.save{
+    padding:13px 22px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:800;
+}
+
+.save:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+/* MESSAGE */
+
+#message{
+    display:none;
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:9999;
+    max-width:450px;
+    padding:15px 18px;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:700;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+}
+
+/* LOADING */
+
+#loading{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(245,247,251,.9);
+    z-index:8000;
+    align-items:center;
+    justify-content:center;
+}
+
+.loading-box{
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.15);
+}
+
+.spinner{
+    width:40px;
+    height:40px;
+    border:4px solid #e5e7eb;
+    border-top-color:#2563eb;
+    border-radius:50%;
+    margin:0 auto 15px;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        min-height:280px;
+    }
+
+    .layout{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:20px;
+    }
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .back-button{
+        width:100%;
+        text-align:center;
+    }
+
+    .row{
+        grid-template-columns:1fr;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .cancel,
+    .save{
+        width:100%;
+        text-align:center;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="loading">
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <p id="loadingText">
+            Loading...
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="layout">
+
+<aside class="sidebar">
+
+    <div class="logo">
+        Tech<span>Pulse</span>
+    </div>
+
+    <div class="admin-label">
+        Administration
+    </div>
+
+    <a href="dashboard.html" class="nav-item">
+        📊 Dashboard
+    </a>
+
+    <a href="articles.html" class="nav-item">
+        📰 Manage Articles
+    </a>
+
+    <a href="create-article.html" class="nav-item active">
+        ✍️ Create Article
+    </a>
+
+    <a href="subscribers.html" class="nav-item">
+        📧 Subscribers
+    </a>
+
+    <a href="settings.html" class="nav-item">
+        ⚙️ Settings
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="header">
+
+        <div>
+
+            <h1 id="pageTitle">
+                Create Article
+            </h1>
+
+            <p id="pageDescription">
+                Create and publish a new TechPulse article.
+            </p>
+
+        </div>
+
+        <a
+            href="articles.html"
+            class="back-button"
+        >
+            ← Manage Articles
+        </a>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <form id="articleForm">
+
+            <div class="form-group">
+
+                <label for="title">
+                    Article Title
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    id="title"
+                    type="text"
+                    placeholder="Enter article title"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="slug">
+                    Slug
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    id="slug"
+                    type="text"
+                    placeholder="article-url-slug"
+                    required
+                >
+
+                <div class="help">
+                    Example: latest-ai-news-2026
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select id="category">
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                    </select>
+
+                    <div class="help">
+                        Choose from your existing categories.
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="author">
+                        Author
+                    </label>
+
+                    <input
+                        id="author"
+                        type="text"
+                        placeholder="Author name"
+                    >
+
+                    <div class="help">
+                        Existing author name, or a new one to create it.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="image_url">
+                    Featured Image URL
+                </label>
+
+                <input
+                    id="image_url"
+                    type="url"
+                    placeholder="https://example.com/image.jpg"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="excerpt">
+                    Short Description
+                </label>
+
+                <textarea
+                    id="excerpt"
+                    placeholder="Write a short description of the article..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="content">
+                    Article Content
+                    <span class="required">*</span>
+                </label>
+
+                <div class="editor-toolbar">
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnBold"
+                    >
+                        Bold
+                    </button>
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnItalic"
+                    >
+                        Italic
+                    </button>
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnHeading"
+                    >
+                        Heading
+                    </button>
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnParagraph"
+                    >
+                        Paragraph
+                    </button>
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnLink"
+                    >
+                        🔗 Link
+                    </button>
+
+                    <button
+                        type="button"
+                        class="editor-btn"
+                        id="btnImage"
+                    >
+                        🖼️ Insert Image
+                    </button>
+
+                </div>
+
+                <textarea
+                    id="content"
+                    placeholder="Write your article here..."
+                    required
+                ></textarea>
+
+                <div class="help">
+                    Write the complete article content here. Use the toolbar to add images or formatting.
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Publication Status
+                </label>
+
+                <div class="status-row">
+
+                    <div class="status-option">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            id="draft"
+                            value="draft"
+                            checked
+                        >
+
+                        <label for="draft">
+                            📝 Draft
+                        </label>
+
+                    </div>
+
+
+                    <div class="status-option">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            id="published"
+                            value="published"
+                        >
+
+                        <label for="published">
+                            🚀 Published
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <a
+                    href="articles.html"
+                    class="cancel"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save"
+                    id="saveButton"
+                >
+                    💾 Save Article
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<div id="message"></div>
+
+
+<script>
+
+"use strict";
+
+
+let editingArticleId = null;
+
+
+/* ELEMENTS */
+
+const form =
+    document.getElementById("articleForm");
+
+const titleInput =
+    document.getElementById("title");
+
+const slugInput =
+    document.getElementById("slug");
+
+const categoryInput =
+    document.getElementById("category");
+
+const authorInput =
+    document.getElementById("author");
+
+const imageInput =
+    document.getElementById("image_url");
+
+const excerptInput =
+    document.getElementById("excerpt");
+
+const contentInput =
+    document.getElementById("content");
+
+const saveButton =
+    document.getElementById("saveButton");
+
+const pageTitle =
+    document.getElementById("pageTitle");
+
+const pageDescription =
+    document.getElementById("pageDescription");
+
+const loading =
+    document.getElementById("loading");
+
+const loadingText =
+    document.getElementById("loadingText");
+
+const message =
+    document.getElementById("message");
+
+
+/* SUPABASE */
+
+function getSupabase(){
+
+    if(!window.supabase){
+
+        throw new Error(
+            "Supabase library did not load."
+        );
+
+    }
+
+    if(!window.supabaseClient){
+
+        throw new Error(
+            window.supabaseInitError ||
+            "Supabase client was not created."
+        );
+
+    }
+
+    return window.supabaseClient;
+
+}
+
+
+/* LOOKUP OR CREATE (category / author) */
+
+async function getOrCreateId(client,table,name){
+
+    if(!name){
+
+        return null;
+
+    }
+
+
+    const existing =
+        await client
+            .from(table)
+            .select("id")
+            .ilike("name",name)
+            .maybeSingle();
+
+
+    if(existing.error){
+
+        throw new Error(
+            existing.error.message
+        );
+
+    }
+
+
+    if(existing.data){
+
+        return existing.data.id;
+
+    }
+
+
+    const created =
+        await client
+            .from(table)
+            .insert([
+                {
+                    name:name
+                }
+            ])
+            .select("id")
+            .single();
+
+
+    if(created.error){
+
+        throw new Error(
+            created.error.message
+        );
+
+    }
+
+
+    return created.data.id;
+
+}
+
+
+/* LOAD CATEGORIES INTO DROPDOWN */
+
+async function loadCategories(){
+
+    try{
+
+        const client =
+            getSupabase();
+
+
+        const {
+            data,
+            error
+        } =
+        await client
+            .from("categories")
+            .select("id,name")
+            .order("name",{
+                ascending:true
+            });
+
+
+        if(error){
+
+            throw new Error(
+                error.message
+            );
+
+        }
+
+
+        (data || []).forEach(
+            function(category){
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    category.id;
+
+                option.textContent =
+                    category.name;
+
+                categoryInput.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Load categories error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(text,type){
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+
+    if(type === "success"){
+
+        message.style.background =
+            "#dcfce7";
+
+        message.style.color =
+            "#166534";
+
+    }else{
+
+        message.style.background =
+            "#fee2e2";
+
+        message.style.color =
+            "#991b1b";
+
+    }
+
+
+    clearTimeout(
+        window.messageTimer
+    );
+
+
+    window.messageTimer =
+        setTimeout(function(){
+
+            message.style.display =
+                "none";
+
+        },5000);
+
+}
+
+
+/* LOADING */
+
+function showLoading(text){
+
+    loadingText.textContent =
+        text || "Loading...";
+
+    loading.style.display =
+        "flex";
+
+}
+
+
+function hideLoading(){
+
+    loading.style.display =
+        "none";
+
+}
+
+
+/* SLUG */
+
+function createSlug(text){
+
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g,"")
+        .replace(/\s+/g,"-")
+        .replace(/-+/g,"-");
+
+}
+
+
+let slugManuallyChanged = false;
+
+
+slugInput.addEventListener(
+    "input",
+    function(){
+
+        slugManuallyChanged = true;
+
+    }
+);
+
+
+titleInput.addEventListener(
+    "input",
+    function(){
+
+        if(!slugManuallyChanged){
+
+            slugInput.value =
+                createSlug(
+                    titleInput.value
+                );
+
+        }
+
+    }
+);
+
+
+/* CONTENT EDITOR TOOLBAR */
+
+function wrapSelection(before,after){
+
+    const start =
+        contentInput.selectionStart;
+
+    const end =
+        contentInput.selectionEnd;
+
+    const value =
+        contentInput.value;
+
+    const selected =
+        value.slice(start,end) ||
+        "text";
+
+    const newValue =
+        value.slice(0,start) +
+        before +
+        selected +
+        after +
+        value.slice(end);
+
+    contentInput.value =
+        newValue;
+
+    const cursorStart =
+        start +
+        before.length;
+
+    contentInput.focus();
+
+    contentInput.setSelectionRange(
+        cursorStart,
+        cursorStart +
+        selected.length
+    );
+
+}
+
+
+function insertAtCursor(text){
+
+    const start =
+        contentInput.selectionStart;
+
+    const end =
+        contentInput.selectionEnd;
+
+    const value =
+        contentInput.value;
+
+    contentInput.value =
+        value.slice(0,start) +
+        text +
+        value.slice(end);
+
+
+    const cursorPos =
+        start +
+        text.length;
+
+    contentInput.focus();
+
+    contentInput.setSelectionRange(
+        cursorPos,
+        cursorPos
+    );
+
+}
+
+
+document.getElementById(
+    "btnBold"
+).addEventListener(
+    "click",
+    function(){
+
+        wrapSelection(
+            "<strong>",
+            "</strong>"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "btnItalic"
+).addEventListener(
+    "click",
+    function(){
+
+        wrapSelection(
+            "<em>",
+            "</em>"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "btnHeading"
+).addEventListener(
+    "click",
+    function(){
+
+        wrapSelection(
+            "<h2>",
+            "</h2>"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "btnParagraph"
+).addEventListener(
+    "click",
+    function(){
+
+        wrapSelection(
+            "<p>",
+            "</p>"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "btnLink"
+).addEventListener(
+    "click",
+    function(){
+
+        const url =
+            prompt(
+                "Enter the link URL:"
+            );
+
+        if(!url){
+
+            return;
+
+        }
+
+        wrapSelection(
+            '<a href="' +
+            url +
+            '" target="_blank" rel="noopener noreferrer">',
+            "</a>"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "btnImage"
+).addEventListener(
+    "click",
+    function(){
+
+        const url =
+            prompt(
+                "Enter the image URL:"
+            );
+
+        if(!url){
+
+            return;
+
+        }
+
+
+        const alt =
+            prompt(
+                "Enter a short description of the image (for accessibility):"
+            ) ||
+            "";
+
+
+        insertAtCursor(
+            '\n<img src="' +
+            url +
+            '" alt="' +
+            alt +
+            '">\n'
+        );
+
+    }
+);
+
+
+/* ARTICLE ID */
+
+function getArticleId(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return params.get("id");
+
+}
+
+
+/* LOAD ARTICLE */
+
+async function loadArticle(id){
+
+    try{
+
+        const client =
+            getSupabase();
+
+        showLoading(
+            "Loading article..."
+        );
+
+
+        const {
+            data,
+            error
+        } =
+        await client
+            .from("articles")
+            .select(`
+                *,
+                categories (
+                    name
+                ),
+                authors (
+                    name
+                )
+            `)
+            .eq("id",id)
+            .maybeSingle();
+
+
+        if(error){
+
+            throw new Error(
+                "Could not load article: " +
+                error.message
+            );
+
+        }
+
+
+        if(!data){
+
+            throw new Error(
+                "Article was not found."
+            );
+
+        }
+
+
+        editingArticleId =
+            data.id;
+
+
+        pageTitle.textContent =
+            "Edit Article";
+
+        pageDescription.textContent =
+            "Update your TechPulse article.";
+
+
+        titleInput.value =
+            data.title || "";
+
+        slugInput.value =
+            data.slug || "";
+
+        slugManuallyChanged =
+            true;
+
+        categoryInput.value =
+            data.category_id || "";
+
+        authorInput.value =
+            (
+                data.authors &&
+                data.authors.name
+            ) || "";
+
+        imageInput.value =
+            data.featured_image || "";
+
+        excerptInput.value =
+            data.excerpt || "";
+
+        contentInput.value =
+            data.content || "";
+
+
+        const status =
+            data.status === "published"
+                ? "published"
+                : "draft";
+
+
+        const statusInput =
+            document.querySelector(
+                'input[name="status"][value="' +
+                status +
+                '"]'
+            );
+
+
+        if(statusInput){
+
+            statusInput.checked =
+                true;
+
+        }
+
+
+        saveButton.textContent =
+            "💾 Update Article";
+
+
+        hideLoading();
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "Load article error:",
+            error
+        );
+
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* SAVE ARTICLE */
+
+async function saveArticle(event){
+
+    event.preventDefault();
+
+
+    let client;
+
+
+    try{
+
+        client =
+            getSupabase();
+
+
+        const title =
+            titleInput.value.trim();
+
+        const slug =
+            slugInput.value.trim();
+
+        const category_id_selected =
+            categoryInput.value || null;
+
+        const author =
+            authorInput.value.trim();
+
+        const image_url =
+            imageInput.value.trim();
+
+        const excerpt =
+            excerptInput.value.trim();
+
+        const content =
+            contentInput.value.trim();
+
+
+        const selectedStatus =
+            document.querySelector(
+                'input[name="status"]:checked'
+            );
+
+
+        const status =
+            selectedStatus
+                ? selectedStatus.value
+                : "draft";
+
+
+        if(!title){
+
+            showMessage(
+                "Please enter an article title.",
+                "error"
+            );
+
+            titleInput.focus();
+
+            return;
+
+        }
+
+
+        if(!slug){
+
+            showMessage(
+                "Please enter an article slug.",
+                "error"
+            );
+
+            slugInput.focus();
+
+            return;
+
+        }
+
+
+        if(!content){
+
+            showMessage(
+                "Please enter the article content.",
+                "error"
+            );
+
+            contentInput.focus();
+
+            return;
+
+        }
+
+
+        const category_id =
+            category_id_selected;
+
+
+        const author_id =
+            await getOrCreateId(
+                client,
+                "authors",
+                author
+            );
+
+
+        const articleData = {
+
+            title:title,
+
+            slug:slug,
+
+            category_id:category_id,
+
+            author_id:author_id,
+
+            featured_image:image_url || null,
+
+            excerpt:excerpt || null,
+
+            content:content,
+
+            status:status
+
+        };
+
+
+        saveButton.disabled =
+            true;
+
+
+        saveButton.textContent =
+            editingArticleId
+                ? "Updating..."
+                : "Saving...";
+
+
+        let result;
+
+
+        if(editingArticleId){
+
+            result =
+                await client
+                    .from("articles")
+                    .update(articleData)
+                    .eq(
+                        "id",
+                        editingArticleId
+                    )
+                    .select()
+                    .single();
+
+        }else{
+
+            result =
+                await client
+                    .from("articles")
+                    .insert([
+                        articleData
+                    ])
+                    .select()
+                    .single();
+
+        }
+
+
+        if(result.error){
+
+            throw new Error(
+                result.error.message
+            );
+
+        }
+
+
+        showMessage(
+            editingArticleId
+                ? "Article updated successfully."
+                : "Article created successfully.",
+            "success"
+        );
+
+
+        setTimeout(
+            function(){
+
+                window.location.href =
+                    "articles.html";
+
+            },
+            1200
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Save article error:",
+            error
+        );
+
+
+        showMessage(
+            error.message ||
+            "Something went wrong while saving the article.",
+            "error"
+        );
+
+
+        saveButton.disabled =
+            false;
+
+
+        saveButton.textContent =
+            editingArticleId
+                ? "💾 Update Article"
+                : "💾 Save Article";
+
+    }
+
+}
+
+
+/* FORM */
+
+form.addEventListener(
+    "submit",
+    saveArticle
+);
+
+
+/* START */
+
+async function startPage(){
+
+    /*
+     * Supabase is initialized in the HEAD
+     * before this script executes.
+     */
+
+    try{
+
+        getSupabase();
+
+    }catch(error){
+
+        console.error(
+            "Supabase initialization error:",
+            error
+        );
+
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    await loadCategories();
+
+
+    const articleId =
+        getArticleId();
+
+
+    if(articleId){
+
+        await loadArticle(
+            articleId
+        );
+
+    }
+
+}
+
+
+startPage();
+
+</script>
+
+</body>
+</html>
